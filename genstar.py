@@ -8,13 +8,13 @@ from math import *
 
 samples_per_day = 144
 days_per_trace = 26
-instrument_noise_amplitude = 0.01
+instrument_noise_amplitude = 0.1
 
 def gen_segment(nsegment,
-                cycle_amplitude=0.0,
-                cycle_period=1,
-                cycle_phase=0,
-                walk_amplitude = 0.0):
+                cycle_amplitude=None,
+                cycle_period=None,
+                cycle_phase=None,
+                walk_amplitude=None):
     """Generate a segment of a simulated star luminance trace,
        consisting of segments with some combination of
        oscillation, random-walk noise and instrument
@@ -24,8 +24,8 @@ def gen_segment(nsegment,
     segment = []
     walk_state = 0.0
     for i in range(nsegment):
-        s = random() * instrument_noise_amplitude
-        walk_state += (2.0 * random() - 1.0) * walk_amplitude
+        s = gauss(0.0, 0.5) * instrument_noise_amplitude
+        walk_state += gauss(0.0, 0.5) * walk_amplitude
         s += walk_state
         s += cos(2 * pi * (i + cycle_phase) / cycle_period) * cycle_amplitude
         segment.append(s)
@@ -36,24 +36,17 @@ def gen_star():
        have a mean of 0 and consist of samples in the range
        -1..1 or less.
     """
-    cycle_amplitude = random()
-    if cycle_amplitude < 0.6:
-        cycle_amplitude = 0.0
-    else:
-        cycle_amplitude = 0.1 + random() * 2.0
     cycle_period = int((0.1 + random() * 4.0) * samples_per_day)
     cycle_phase = randrange(int(cycle_period))
-    walk_amplitude = random()
-    if walk_amplitude < 0.6:
-        walk_amplitude = 0.0
-    else:
-        walk_amplitude = 0.1 + random() * 2.0
+    cycle_amplitude = 0.0
+    walk_amplitude = 0.0
+    if random() < 0.3:
+        cycle_amplitude = 0.01 + 0.1 * random()
+    elif random() < 0.6:
+        walk_amplitude = random() * 0.025
     # Calculate a trace as a series of segments.
-    # Yes, this is left-biased and skewed heavily
-    # toward less segments. Meh.
-    nsegments = 1
-    while random() <= 0.20:
-        nsegments += 1
+    # Yes, this is left-biased. Meh.
+    nsegments = max(1, int(gauss(0.5, 4.0)))
     nsamples = samples_per_day * days_per_trace
     samples = []
     while nsegments > 0:
@@ -62,7 +55,7 @@ def gen_star():
             segment_bias = random() * 0.4 - 0.2
             nsegment = randrange(samples_per_day, segment_max)
         else:
-            segment_bias = 0
+            segment_bias = 0.0
             nsegment = segment_max
         segment = gen_segment(nsegment,
                               cycle_amplitude=cycle_amplitude,
