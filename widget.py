@@ -53,17 +53,17 @@ class StarWidget:
         x = [float(i) / spd for i in range(n)]
         y = [100.0 + s for s in self.star]
         self.plot.cla()
-        style = 'b'
+
         use_points = self.use_points.get()
         use_lines = self.use_lines.get()
-        if use_points or use_lines:
-            if use_points:
-                style += 'o'
-            if use_lines:
-                style += '-'
-        else:
-            style += ':'
-        self.plot.plot(x, y, style)
+        if use_lines or not use_points:
+            style = '-'
+            if not use_lines and not use_points:
+                style = ':'
+            self.plot.plot(x, y, style, color="blue", linewidth=0.5)
+        if use_points:
+            self.plot.scatter(x, y, c="red", s=1.5)
+
         self.canvas.draw()
 
 window= Tk()
