@@ -7,7 +7,7 @@ from random import *
 from math import *
 
 samples_per_day = 144
-days_per_trace = 26
+days_per_trace = 30
 instrument_noise_amplitude = 0.1
 
 def gen_segment(nsegment,
@@ -51,7 +51,7 @@ def gen_star():
     samples = []
     while nsegments > 0:
         segment_max = nsamples - len(samples)
-        if nsegments > 1:
+        if nsegments > 1 and segment_max >= samples_per_day:
             segment_bias = random() * 0.4 - 0.2
             nsegment = randrange(samples_per_day, segment_max)
         else:
