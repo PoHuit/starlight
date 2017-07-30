@@ -76,5 +76,6 @@ def gen_star():
     bias = sum_samples / len(samples)
     return [(s - bias) * scale for s in samples]
 
-for s in gen_star():
-    print(s)
+if __name__ == '__main__':
+    for s in gen_star():
+        print(s)
