@@ -1,4 +1,7 @@
-# Copyright (c) 2017 Bart Massey
+# Copyright (c) 2017 Po Huit
+# [This program is licensed under the "MIT License"]
+# Please see the file COPYING in the source
+# distribution of this software for license terms.
 
 # Code by Dania and Eric Levieil used under license from
 # http://stackoverflow.com/a/31453958
@@ -20,8 +23,8 @@ class StarWidget:
         self.use_lines = BooleanVar(window, True)
         self.use_points = BooleanVar(window, False)
 
-        fig = Figure(figsize=(18,6))
-        self.plot = fig.add_subplot(1,1,1)
+        fig = Figure(figsize=(18, 6))
+        self.plot = fig.add_subplot(1, 1, 1)
         self.plot.set_title ("Star Luminance", fontsize=16)
         self.plot.set_ylabel("%", fontsize=14)
         self.plot.set_xlabel("day", fontsize=14)
