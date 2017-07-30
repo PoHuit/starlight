@@ -19,29 +19,32 @@ class StarWidget:
                               command=self.do_generate)
         self.button.pack()
         self.star = genstar.gen_star()
-        self.plot()
+        self.canvas = None
+        self.plot = None
+        self.plot_current()
 
     def do_generate(self):
         self.star = genstar.gen_star()
-        self.plot()
+        self.plot_current()
 
-    def plot(self):
-        x = [float(i) / genstar.samples_per_day for i in range(len(self.star))]
+    def plot_current(self):
+
+        if not self.canvas:
+            fig = Figure(figsize=(18,6))
+            self.plot = fig.add_subplot(1,1,1)
+            self.plot.set_title ("Star Luminance", fontsize=16)
+            self.plot.set_ylabel("%", fontsize=14)
+            self.plot.set_xlabel("day", fontsize=14)
+            self.canvas = FigureCanvasTkAgg(fig, master=self.window)
+            self.canvas.get_tk_widget().pack()
+
+        spd = genstar.samples_per_day
+        n = spd * genstar.days_per_trace
+        x = [float(i) / spd for i in range(n)]
         y = [100.0 + s for s in self.star]
-
-        fig = Figure(figsize=(18,6))
-        a = fig.add_subplot(111)
-        a.scatter(x,y,color='blue')
-        #a.plot(p, range(2 +max(x)),color='blue')
-        #a.invert_yaxis()
-
-        a.set_title ("Star Luminance", fontsize=16)
-        a.set_ylabel("%", fontsize=14)
-        a.set_xlabel("day", fontsize=14)
-
-        canvas = FigureCanvasTkAgg(fig, master=self.window)
-        canvas.get_tk_widget().pack()
-        canvas.draw()
+        self.plot.cla()
+        self.plot.scatter(x,y,color='blue')
+        self.canvas.draw()
 
 window= Tk()
 start= StarWidget(window)
