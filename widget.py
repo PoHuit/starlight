@@ -23,13 +23,14 @@ class StarWidget:
         self.use_lines = BooleanVar(window, True)
         self.use_points = BooleanVar(window, False)
 
-        fig = Figure(figsize=(18, 6))
+        fig = Figure()
+        fig.set_size_inches(6, h=2, forward=True)
         self.plot = fig.add_subplot(1, 1, 1)
         self.plot.set_title ("Star Luminance", fontsize=16)
         self.plot.set_ylabel("%", fontsize=14)
         self.plot.set_xlabel("day", fontsize=14)
         self.canvas = FigureCanvasTkAgg(fig, master=self.window)
-        self.canvas.get_tk_widget().pack()
+        self.canvas.get_tk_widget().pack(side=TOP, fill=BOTH, expand=True)
         self.plot_current()
 
         buttons = Frame(window)
@@ -44,7 +45,7 @@ class StarWidget:
         generate = Button(buttons, text="Generate",
                           command=self.do_generate)
         generate.pack(side=LEFT)
-        buttons.pack(fill=BOTH, expand=True)
+        buttons.pack(side=TOP, fill=X, expand=False)
 
     def do_generate(self):
         self.star = genstar.gen_star()
